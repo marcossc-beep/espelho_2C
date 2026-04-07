@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espelho de Classe - Turma 2C (Layout 8 Colunas)</title>
+    <style>
+        :root {
+            --presente: #4caf50;
+            --ausente: #f44336;
+            --vazio: #e0e0e0;
+            --texto: #333;
+            --bg: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .container:fullscreen {
+            max-width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+            padding: 15px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+        }
+
+        .container:fullscreen .controles,
+        .container:fullscreen .resumo {
+            display: none !important;
+        }
+
+        .controles {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .label-direcao {
+            text-align: center;
+            font-weight: bold;
+            padding: 6px;
+            background: #eee;
+            margin: 2px 0;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .grid-sala {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr); /* Mantido 8 colunas para padrão da sala */
+            gap: 6px;
+            margin: 5px 0;
+            flex-grow: 1; 
+        }
+
+        .aluno {
+            min-height: 60px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 4px;
+            background-color: white;
+            color: var(--texto);
+            transition: transform 0.1s;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+
+        .container:fullscreen .aluno {
+            font-size: 0.95rem;
+        }
+
+        .aluno.status-presente { background-color: var(--presente); color: white; border-color: #388e3c; }
+        .aluno.status-ausente { background-color: var(--ausente); color: white; border-color: #d32f2f; }
+        .aluno.vazio { background-color: var(--vazio); border: 1px dashed #ccc; cursor: default; }
+
+        .resumo {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff9f9;
+            border-radius: 8px;
+            border-left: 5px solid var(--ausente);
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-fullscreen { background: #2196F3; color: white; }
+        .btn-reset { background: #666; color: white; }
+
+        @media (max-width: 600px) {
+            .aluno { font-size: 0.6rem; }
+            .grid-sala { gap: 3px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="area-estudo">
+        <div class="controles">
+            <button class="btn-fullscreen" onclick="toggleFullScreen()">🖥️ Tela Cheia</button>
+            <button class="btn-reset" onclick="resetarChamada()">🧹 Limpar</button>
+        </div>
+
+        <div class="label-direcao">⬆️ FRENTE (LOUSA / PROFESSOR) ⬆️</div>
+
+        <div class="grid-sala" id="mapa"></div>
+
+        <div class="label-direcao">⬇️ FUNDO DA SALA ⬇️</div>
+
+        <div class="resumo">
+            <strong>Faltas (2C):</strong> <span id="lista-faltas">Nenhuma.</span>
+        </div>
+    </div>
+
+    <script>
+        // Nomes organizados para preencher as 8 colunas da sala
+        const layout = [
+            ["Marcos*", "Bruno Pacheco", "Pedro Sergio", "Arthur Guedes", "João Portela", "Joaquin*", "Clarice", "Gabrielly"],
+            ["Kaue", "Matheus", "Gabriel Volpato*", "Pedro Heins", "Gustavo Bonato", "Lucas Medeiros", "Vinicius D", "Igor*"],
+            ["Nicolas Giliarde", "Nicolas Ferreira", "Augusto", "Beatriz", "Leticia*", "Eloísa", "Paulo", "Arthur F."],
+            ["Luiz Otavio", "Luiggi", "Lucas Ouriques", "Henrique*", "João Luz", "Vinicius Ferreira*", "Pedro Moresco", "Pedro Barreto"],
+            ["Maria Luiza", "Marina", "Arthur Nunes*", "Nicolas Redel", "Nicolas Stela", "Heitor", "Davi M.", ""]
+        ];
+
+        let estados = JSON.parse(localStorage.getItem('chamada_2C_v8')) || {};
+
+        function renderizar() {
+            const mapa = document.getElementById('mapa');
+            const listaFaltas = document.getElementById('lista-faltas');
+            mapa.innerHTML = '';
+            let faltas = [];
+
+            layout.forEach((fila, i) => {
+                fila.forEach((nome, j) => {
+                    const id = `${i}-${j}`;
+                    const div = document.createElement('div');
+                    
+                    if (!nome) {
+                        div.className = 'aluno vazio';
+                    } else {
+                        div.className = 'aluno';
+                        div.innerText = nome;
+                        if (estados[id] === 1) div.classList.add('status-presente');
+                        if (estados[id] === 2) {
+                            div.classList.add('status-ausente');
+                            faltas.push(nome);
+                        }
+                        div.onclick = () => {
+                            estados[id] = ((estados[id] || 0) + 1) % 3;
+                            renderizar();
+                        };
+                    }
+                    mapa.appendChild(div);
+                });
+            });
+
+            listaFaltas.innerText = faltas.length > 0 ? faltas.join(', ') : "Todos presentes.";
+            localStorage.setItem('chamada_2C_v8', JSON.stringify(estados));
+        }
+
+        function toggleFullScreen() {
+            const elem = document.getElementById("area-estudo");
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => {
+                    alert(`Erro: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function resetarChamada() {
+            if(confirm("Limpar marcações da 2C?")) {
+                estados = {};
+                renderizar();
+            }
+        }
+
+        renderizar();
+    </script>
+</body>
+</html>
