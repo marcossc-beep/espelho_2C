@@ -67,14 +67,14 @@
             color: #666;
         }
 
+        /* Localize esta linha e mude de 8 para 10 */
         .grid-sala {
             display: grid;
-            grid-template-columns: repeat(8, 1fr); /* Mantido 8 colunas para padrão da sala */
+            grid-template-columns: repeat(10, 1fr); /* Alterado para 10 */
             gap: 6px;
             margin: 5px 0;
             flex-grow: 1; 
         }
-
         .aluno {
             min-height: 60px; 
             display: flex;
@@ -131,15 +131,15 @@
 
     <div class="container" id="area-estudo">
         <div class="controles">
-            <button class="btn-fullscreen" onclick="toggleFullScreen()">🖥️ Tela Cheia</button>
-            <button class="btn-reset" onclick="resetarChamada()">🧹 Limpar</button>
+            <button class="btn-fullscreen" onclick="toggleFullScreen()">Tela Cheia</button>
+            <button class="btn-reset" onclick="resetarChamada()">Limpar</button>
         </div>
 
-        <div class="label-direcao">⬆️ FRENTE (LOUSA / PROFESSOR) ⬆️</div>
+        <div class="label-direcao">FRENTE (LOUSA / PROFESSOR)</div>
 
         <div class="grid-sala" id="mapa"></div>
 
-        <div class="label-direcao">⬇️ FUNDO DA SALA ⬇️</div>
+        <div class="label-direcao">FUNDO DA SALA </div>
 
         <div class="resumo">
             <strong>Faltas (2C):</strong> <span id="lista-faltas">Nenhuma.</span>
@@ -147,13 +147,13 @@
     </div>
 
     <script>
-        // Nomes organizados para preencher as 8 colunas da sala
-        const layout = [
-            ["& Joaquim N.", "& Clarice C.", "& Kauê S.", "& Davi M.", "& Mateus S.", "** Pedro B.", "Gabriel V", "Pedro S.", "* Augusto W."],
-            ["* Heitor M.", "Ígor P.", "* Nicolas G.", "* Luiz Otávio H.", "", "** Vinicius F.", "Nicolas F.", "Luiggi K.", "Vinicius D."],
-            ["Gustavo B.", "João Luz", "Arthur N.", "* Pedro M.", "", "* João Vitor P.", "Arthur G.", "Bruno P.", ""],
-            ["Eloísa P.", "Beatriz W.", "Letícia S.", "", "", "* Marcos A.", "Pedro Heins", "Lucas O.", "Henrique S."],
-            ["Maria Luiza D.", "Arthur F.", "Marina M.", "", "", "Nicolas R.", "Arthur N.", "Paulo V.", "Nicolas S."]
+
+       const layout = [
+            ["& Joaquim N.", "& Clarice C.", "& Kauê S.", "& Davi M.", "& Mateus S.", "", "** Pedro B.", "Gabriel V", "Pedro S.", "* Augusto W."],
+            ["Pedro Heins", "* Nicolas G.", "Ígor P.", "* Heitor M.", "", "", "* João Vitor P.", "Nicolas F.", "** Vinicius F.", "Vinicius D."],
+            ["Gustavo B.", "João Luz", "Arthur N.", "* Pedro M.", "", "", "* Marcos A.", "", "Arthur G.", "Bruno P."],
+            ["Eloísa P.", "Beatriz W.", "Letícia S.", "", "", "", "Luiz Otávio H", "Luiggi K.", "* Lucas O.", "Henrique S."],
+            ["Maria Luiza D.", "Arthur F.", "Marina M.", "", "", "", "Nicolas R.", "Arthur N.", "Paulo V.", "Nicolas S."]
         ];
 
         let estados = JSON.parse(localStorage.getItem('chamada_2C_v8')) || {};
