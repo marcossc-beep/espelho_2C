@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espelho de Classe - Turma 2C (Layout 8 Colunas)</title>
+    <title>Espelho de Classe - Turma 2C</title>
     <style>
         :root {
             --presente: #4caf50;
@@ -67,14 +67,15 @@
             color: #666;
         }
 
-        / Localize esta linha e mude de 8 para 10 */
+        /* Corrigido o erro de sintaxe no comentário e ajustado para 9 colunas */
         .grid-sala {
             display: grid;
-            grid-template-columns: repeat(9, 1fr); / Alterado para 10 */
+            grid-template-columns: repeat(9, 1fr); 
             gap: 6px;
             margin: 5px 0;
             flex-grow: 1; 
         }
+
         .aluno {
             min-height: 60px; 
             display: flex;
@@ -147,8 +148,7 @@
     </div>
 
     <script>
-
-       const layout = [
+        const layout = [
             [" Joaquim N.", " Clarice C.", " Kauê S.", " Davi M.", " Mateus S.", "Pedro B.", "Gabriel V", "Pedro S.", " Augusto W."],
             ["Pedro Heins", " Nicolas G.", "Ígor P.", " Heitor M.", "", " João Vitor P.", "Nicolas F.", "Vinicius F.", "Vinicius D."],
             ["Gustavo B.", "João Luz", "Arthur N.", " Pedro M.", "", " Marcos A.", "", "Arthur G.", "Bruno P."],
