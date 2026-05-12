@@ -6,22 +6,25 @@
     <title>Espelho de Classe - Turma 2C</title>
     <style>
         :root {
-            --presente: #4caf50;
-            --ausente: #f44336;
-            --vazio: #e0e0e0;
-            --texto: #333;
-            --bg: #f5f5f5;
-            --accent: #2196F3;
+            /* Cores com contraste reforçado */
+            --presente: #2e7d32; /* Verde mais escuro para contraste */
+            --ausente: #d32f2f;   /* Vermelho mais vivo */
+            --vazio: #cfd8dc;
+            --texto: #1a1a1a;
+            --bg: #eceff1;
+            --accent: #1976D2;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             margin: 0;
             padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
@@ -30,20 +33,32 @@
             background: white;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
             box-sizing: border-box;
-            overflow-x: hidden; /* Evita quebra de layout */
         }
 
-        /* Ajustes para Tela Cheia */
+        /* --- AJUSTES PARA TELA CHEIA --- */
         .container:fullscreen {
             width: 100vw;
             height: 100vh;
             max-width: none;
             border-radius: 0;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
+            padding: 15px;
+            justify-content: space-between; /* Distribui lousa, grid e resumo */
+        }
+
+        /* Aumenta o texto e os cards no modo tela cheia */
+        .container:fullscreen .aluno {
+            font-size: 1.1rem;
+            border-width: 3px;
+        }
+
+        .container:fullscreen .label-direcao {
+            margin: 5px 0;
+            padding: 5px;
+            font-size: 1rem;
         }
 
         .controles {
@@ -51,103 +66,107 @@
             gap: 10px;
             margin-bottom: 15px;
             justify-content: center;
-            flex-wrap: wrap;
         }
 
         .label-direcao {
             text-align: center;
             font-weight: bold;
-            padding: 10px;
-            background: #f0f0f0;
+            padding: 8px;
+            background: #37474f;
             margin: 10px 0;
             border-radius: 6px;
             font-size: 0.85rem;
-            color: #555;
+            color: white;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid #ddd;
+            letter-spacing: 2px;
         }
 
-        /* Container do Grid para permitir scroll horizontal em telas muito pequenas */
         .grid-wrapper {
+            flex-grow: 1; /* Faz o grid ocupar o espaço central */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
-            overflow-x: auto;
-            padding-bottom: 10px;
+            overflow: hidden;
         }
 
         .grid-sala {
             display: grid;
-            /* Garante 9 colunas, mas com tamanho mínimo para não esmagar o texto */
-            grid-template-columns: repeat(9, minmax(80px, 1fr)); 
-            gap: 8px;
-            margin: 10px 0;
-            min-width: 750px; /* Mantém a estrutura de sala em telas pequenas */
+            grid-template-columns: repeat(9, 1fr); 
+            gap: 10px;
+            width: 100%;
+            height: 100%; /* Ocupa o wrapper */
+            max-height: 70vh; /* Limite para não empurrar o resumo */
         }
 
         .aluno {
-            aspect-ratio: 1 / 1; /* Mantém quadradinho */
-            min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 0.7rem;
-            font-weight: 600;
-            border: 2px solid #eee;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 2px solid #ddd;
             border-radius: 8px;
             cursor: pointer;
-            padding: 5px;
+            padding: 8px;
             background-color: #fff;
             color: var(--texto);
-            transition: all 0.2s ease;
+            transition: all 0.15s ease-in-out;
             word-wrap: break-word;
-            line-height: 1.2;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.02);
+            line-height: 1.1;
+            aspect-ratio: 4 / 3; /* Melhor proporção para nomes */
         }
 
-        .aluno:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .aluno.status-presente { 
+            background-color: var(--presente); 
+            color: white; 
+            border-color: #1b5e20;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
         }
 
-        .aluno.status-presente { background-color: var(--presente); color: white; border-color: #388e3c; }
-        .aluno.status-ausente { background-color: var(--ausente); color: white; border-color: #d32f2f; }
+        .aluno.status-ausente { 
+            background-color: var(--ausente); 
+            color: white; 
+            border-color: #b71c1c;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        }
+
         .aluno.vazio { 
-            background-color: var(--vazio); 
-            border: 1px dashed #bbb; 
+            background-color: transparent; 
+            border: 1px dashed #ccc; 
             cursor: default; 
-            opacity: 0.5;
+            opacity: 0.3;
         }
 
         .resumo {
-            margin-top: 20px;
-            padding: 15px;
-            background: #fff5f5;
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff;
             border-radius: 8px;
-            border-left: 5px solid var(--ausente);
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: opacity 0.2s;
+            border: 2px solid var(--ausente);
             font-size: 0.9rem;
         }
 
-        .btn-fullscreen { background: var(--accent); color: white; }
-        .btn-reset { background: #555; color: white; }
-        button:active { opacity: 0.8; }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-        /* Media Queries para Mobile */
-        @media (max-width: 600px) {
-            .container { padding: 10px; }
-            .aluno { font-size: 0.65rem; min-height: 60px; }
-            .btn-fullscreen, .btn-reset { flex: 1; }
+        .btn-fullscreen { background: var(--accent); color: white; }
+        .btn-reset { background: #546e7a; color: white; }
+
+        /* Ajuste para telas pequenas fora do modo fullscreen */
+        @media (max-width: 800px) {
+            .grid-sala {
+                grid-template-columns: repeat(9, minmax(60px, 1fr));
+            }
+            .grid-wrapper { overflow-x: auto; justify-content: flex-start; }
         }
     </style>
 </head>
@@ -155,21 +174,21 @@
 
     <div class="container" id="area-estudo">
         <div class="controles">
-            <button class="btn-fullscreen" onclick="toggleFullScreen()">⛶ Tela Cheia</button>
-            <button class="btn-reset" onclick="resetarChamada()">↺ Limpar Tudo</button>
+            <button class="btn-fullscreen" onclick="toggleFullScreen()">⛶ TELA CHEIA</button>
+            <button class="btn-reset" onclick="resetarChamada()">↺ LIMPAR</button>
         </div>
 
-        <div class="label-direcao">Lousa / Professor</div>
+        <div class="label-direcao">LOUSA / PROFESSOR</div>
 
         <div class="grid-wrapper">
             <div class="grid-sala" id="mapa"></div>
         </div>
 
-        <div class="label-direcao">Fundo da Sala</div>
+        <div class="label-direcao">FUNDO DA SALA</div>
 
         <div class="resumo">
-            <strong>Lista de Faltas (2C):</strong> <br>
-            <span id="lista-faltas" style="color: var(--ausente); font-weight: bold;">Nenhuma.</span>
+            <strong>FALTAS:</strong> 
+            <span id="lista-faltas" style="color: var(--ausente); font-weight: 900;">Nenhuma.</span>
         </div>
     </div>
 
@@ -182,7 +201,7 @@
             ["Maria Luiza D.", "Arthur F.", "Marina M.", "", "", "Nicolas R.", "Arthur N.", "Paulo V.", "Nicolas S."]
         ];
 
-        let estados = JSON.parse(localStorage.getItem('chamada_2C_v8')) || {};
+        let estados = JSON.parse(localStorage.getItem('chamada_2C_v9')) || {};
 
         function renderizar() {
             const mapa = document.getElementById('mapa');
@@ -217,14 +236,14 @@
             });
 
             listaFaltas.innerText = faltas.length > 0 ? faltas.join(', ') : "Todos presentes.";
-            localStorage.setItem('chamada_2C_v8', JSON.stringify(estados));
+            localStorage.setItem('chamada_2C_v9', JSON.stringify(estados));
         }
 
         function toggleFullScreen() {
             const elem = document.getElementById("area-estudo");
             if (!document.fullscreenElement) {
                 elem.requestFullscreen().catch(err => {
-                    alert(`Erro ao tentar ativar tela cheia: ${err.message}`);
+                    alert(`Erro: ${err.message}`);
                 });
             } else {
                 document.exitFullscreen();
@@ -232,13 +251,12 @@
         }
 
         function resetarChamada() {
-            if(confirm("Deseja realmente limpar todas as marcações da turma 2C?")) {
+            if(confirm("Deseja limpar as marcações?")) {
                 estados = {};
                 renderizar();
             }
         }
 
-        // Inicializa
         renderizar();
     </script>
 </body>
